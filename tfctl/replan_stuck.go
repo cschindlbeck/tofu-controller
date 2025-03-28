@@ -29,7 +29,7 @@ func (c *CLI) ReplanStuck(ctx context.Context, out io.Writer, resource string) e
 		Namespace: c.namespace,
 	}
 
-	if err := replan(ctx, c.client, key); err != nil {
+	if err := replan_stuck(ctx, c.client, key); err != nil {
 		return err
 	}
 
