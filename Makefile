@@ -113,8 +113,15 @@ test-internal: manifests generate download-crd-deps fmt vet envtest api-docs ## 
 	$(TEST_SETTINGS) go test ./internal/... -coverprofile cover.out -v
 
 .PHONY: gen-grpc
+# gen-grpc:
+# 	env PATH=$(shell pwd)/bin:$$PATH $(PROJECT_DIR)/bin/protoc --go_out=. --go_opt=Mrunner/runner.proto=runner/ --go-grpc_out=. --go-grpc_opt=Mrunner/runner.proto=runner/ runner/runner.proto
+#
+
 gen-grpc:
-	env PATH=$(shell pwd)/bin:$$PATH $(PROJECT_DIR)/bin/protoc --go_out=. --go_opt=Mrunner/runner.proto=runner/ --go-grpc_out=. --go-grpc_opt=Mrunner/runner.proto=runner/ runner/runner.proto
+	protoc --go_out=. --go_opt=Mrunner/runner.proto=runner/ \
+	       --go-grpc_out=. --go-grpc_opt=Mrunner/runner.proto=runner/ \
+	       runner/runner.proto
+
 
 ##@ Build
 

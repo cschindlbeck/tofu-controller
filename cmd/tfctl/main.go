@@ -57,6 +57,7 @@ func newRootCommand() *cobra.Command {
 	rootCmd.AddCommand(buildInstallCmd(app))
 	rootCmd.AddCommand(buildReconcileCmd(app))
 	rootCmd.AddCommand(buildApprovePlanCmd(app))
+	rootCmd.AddCommand(buildReplanStuckCmd(app))
 	rootCmd.AddCommand(buildReplanCmd(app))
 	rootCmd.AddCommand(buildResumeCmd(app))
 	rootCmd.AddCommand(buildSuspendCmd(app))
@@ -372,6 +373,24 @@ func buildForceUnlockCmd(app *tfctl.CLI) *cobra.Command {
 	forceUnlock.Flags().String("lock-id", "", "Set the lock-id that currently holds the lock of the terraform state e.g. f2ab685b-f84d-ac0b-a125-378a22877e8d")
 	viper.BindPFlags(forceUnlock.Flags())
 	return forceUnlock
+}
+
+var replanStuckExamples = `
+	# Replan a stuck Terraform resource
+	tfctl -n default replan-stuck my-resource
+`
+
+func buildReplanStuckCmd(app *tfctl.CLI) *cobra.Command {
+	replanStuck := &cobra.Command{
+		Use:     "replan-stuck",
+		Short:   "Replan a stuck Terraform resource",
+		Example: strings.Trim(replanStuckExamples, "\n"),
+		Args:    cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return app.Replan(cmd.Context(), os.Stdout, args[0])
+		},
+	}
+	return replanStuck
 }
 
 var replanExamples = `
